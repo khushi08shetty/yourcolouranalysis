@@ -105,7 +105,7 @@ def analyze_image(image_path):
 
             # Crop the hair mask to the top 40% of the image
             height, width, _ = hair.shape
-            hair = hair[:int(0.4 * height), :, :]
+            hair = hair[:int(0.2 * height), :, :]
 
             # Function to isolate features with transparent background
             def isolate_feature_with_transparency(indices):
