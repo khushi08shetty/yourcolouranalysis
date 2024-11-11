@@ -1,0 +1,236 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Color Analysis</title>
+</head>
+<body>
+    <h1>Upload an Image for Color Analysis</h1>
+    <form action="{{ url_for('upload') }}" method="post" enctype="multipart/form-data">
+        <input type="file" name="image" accept="image/*" capture="environment" required>
+        <button type="submit">Analyze Image</button>
+    </form>
+</body>
+</html> -->
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Color Analysis</title>
+</head>
+<body>
+    <h1>Upload or Capture an Image for Color Analysis</h1>
+    
+    #Option to upload an image 
+    <form id="uploadForm" action="{{ url_for('upload') }}" method="post" enctype="multipart/form-data">
+        <input type="file" name="image" accept="image/*" required>
+        <button type="submit">Analyze Uploaded Image</button>
+    </form>
+
+    <hr>
+
+    #Option to capture an image from the camera 
+    <h2>Or take a real-time picture</h2>
+    <button onclick="openCamera()">Open Camera</button>
+    <video id="video" width="300" autoplay style="display: none;"></video>
+    <canvas id="canvas" width="300" height="300" style="display: none;"></canvas>
+    <button onclick="capturePhoto()" style="display: none;" id="captureButton">Capture Photo</button>
+    
+    <form id="captureForm" action="{{ url_for('upload') }}" method="post" enctype="multipart/form-data" style="display: none;">
+        <input type="hidden" name="image_data" id="image_data">
+        <button type="submit">Analyze Captured Image</button>
+    </form>
+
+    <script>
+        // Open the camera and start video streaming
+        function openCamera() {
+            const video = document.getElementById('video');
+            const captureButton = document.getElementById('captureButton');
+            
+            video.style.display = 'block';
+            captureButton.style.display = 'inline';
+            
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then((stream) => {
+                    video.srcObject = stream;
+                })
+                .catch((error) => {
+                    console.error("Camera error:", error);
+                });
+        }
+
+        // Capture photo from the video stream
+        function capturePhoto() {
+            const video = document.getElementById('video');
+            const canvas = document.getElementById('canvas');
+            const image_data_input = document.getElementById('image_data');
+            const captureForm = document.getElementById('captureForm');
+            
+            canvas.style.display = 'block';
+            canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+            
+            // Stop the video stream
+            video.srcObject.getTracks().forEach(track => track.stop());
+            video.style.display = 'none';
+            
+            // Convert the canvas image to a data URL and send it as a hidden form input
+            const imageDataUrl = canvas.toDataURL('image/png');
+            image_data_input.value = imageDataUrl;
+            
+            captureForm.style.display = 'block';
+            captureButton.style.display = 'none';
+        }
+    </script>
+</body>
+</html> -->
+
+
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Color Analysis</title>
+    <style>
+        /* General body styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Styling for the main heading */
+        h1 {
+            color: #4a90e2;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        /* Form styling */
+        form {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            width: 100%;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        input[type="file"] {
+            margin-bottom: 15px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #4a90e2;
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 16px;
+            margin-top: 10px;
+            width: 100%;
+            max-width: 200px;
+        }
+
+        button:hover {
+            background-color: #357abd;
+        }
+
+        hr {
+            margin: 30px 0;
+            border: 0;
+            border-top: 1px solid #ccc;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        h2 {
+            color: #333;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        /* Video and Canvas styling */
+        video, canvas {
+            border: 2px solid #4a90e2;
+            border-radius: 4px;
+            margin-top: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Upload or Capture an Image for Color Analysis</h1>
+    
+    <!-- Option to upload an image -->
+    <form id="uploadForm" action="{{ url_for('upload') }}" method="post" enctype="multipart/form-data">
+        <input type="file" name="image" accept="image/*" required>
+        <button type="submit">Analyze Uploaded Image</button>
+    </form>
+
+    <hr>
+
+    <!-- Option to capture an image from the camera -->
+    <h2>Or take a real-time picture</h2>
+    <button onclick="openCamera()">Open Camera</button>
+    <video id="video" width="300" autoplay></video>
+    <canvas id="canvas" width="300" height="300"></canvas>
+    <button onclick="capturePhoto()" id="captureButton" style="display: none;">Capture Photo</button>
+    
+    <form id="captureForm" action="{{ url_for('upload') }}" method="post" enctype="multipart/form-data" style="display: none;">
+        <input type="hidden" name="image_data" id="image_data">
+        <button type="submit">Analyze Captured Image</button>
+    </form>
+
+    <script>
+        function openCamera() {
+            const video = document.getElementById('video');
+            const captureButton = document.getElementById('captureButton');
+            
+            video.style.display = 'block';
+            captureButton.style.display = 'inline';
+            
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then((stream) => {
+                    video.srcObject = stream;
+                })
+                .catch((error) => {
+                    console.error("Camera error:", error);
+                });
+        }
+
+        function capturePhoto() {
+            const video = document.getElementById('video');
+            const canvas = document.getElementById('canvas');
+            const image_data_input = document.getElementById('image_data');
+            const captureForm = document.getElementById('captureForm');
+            
+            canvas.style.display = 'block';
+            canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+            
+            video.srcObject.getTracks().forEach(track => track.stop());
+            video.style.display = 'none';
+            
+            const imageDataUrl = canvas.toDataURL('image/png');
+            image_data_input.value = imageDataUrl;
+            
+            captureForm.style.display = 'block';
+            captureButton.style.display = 'none';
+        }
+    </script>
+</body>
+</html>
